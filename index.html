@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NestIQ — Smart Apartment Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0D1B2A;
+      --slate:   #1B3A6B;
+      --teal:    #00C2CB;
+      --teal2:   #00898f;
+      --white:   #F0F4F8;
+      --gray:    #8899AA;
+      --card-bg: #122238;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(13,27,42,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,194,203,0.12);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--teal); letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--white); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--gray); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.3px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-cta {
+      background: var(--teal); color: var(--navy);
+      padding: 0.55rem 1.4rem; border-radius: 6px;
+      font-weight: 600; font-size: 0.88rem; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: #00a8af; }
+
+    /* ── HERO ────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8rem 3rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(27,58,107,0.45) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-text { flex: 0 0 52%; max-width: 560px; position: relative; z-index: 2; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(0,194,203,0.1); border: 1px solid rgba(0,194,203,0.3);
+      color: var(--teal); padding: 0.35rem 0.9rem; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 1.2px;
+      text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .pulse-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--teal); animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 5vw, 3.9rem);
+      font-weight: 900; line-height: 1.1;
+      margin-bottom: 1.4rem;
+    }
+    .hero h1 em { color: var(--teal); font-style: normal; }
+    .hero p {
+      color: var(--gray); font-size: 1.05rem; line-height: 1.7;
+      margin-bottom: 2.2rem; max-width: 440px;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--teal); color: var(--navy);
+      padding: 0.8rem 1.9rem; border-radius: 8px;
+      font-weight: 700; font-size: 0.95rem; text-decoration: none;
+      transition: transform 0.15s, background 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: #00a8af; transform: translateY(-1px); }
+    .btn-outline {
+      border: 1px solid rgba(0,194,203,0.4); color: var(--teal);
+      padding: 0.8rem 1.9rem; border-radius: 8px;
+      font-weight: 600; font-size: 0.95rem; text-decoration: none;
+      transition: border-color 0.2s, background 0.2s; display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--teal); background: rgba(0,194,203,0.06); }
+
+    /* Building SVG illustration */
+    .hero-visual {
+      flex: 0 0 44%; display: flex; align-items: flex-end;
+      justify-content: center; position: relative; z-index: 2;
+    }
+    .building-wrap { position: relative; }
+    .building-wrap svg { display: block; }
+    .win-light {
+      animation: winkle 3s ease-in-out infinite;
+    }
+    .win-light:nth-child(2) { animation-delay: 0.7s; }
+    .win-light:nth-child(3) { animation-delay: 1.4s; }
+    .win-light:nth-child(4) { animation-delay: 2.1s; }
+    @keyframes winkle {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* stats row */
+    .hero-stats {
+      display: flex; gap: 2.5rem; margin-top: 3rem;
+      padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 0.2rem; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 700; color: var(--white);
+    }
+    .stat-label { font-size: 0.78rem; color: var(--gray); letter-spacing: 0.5px; }
+
+    /* ── FEATURES ────────────────────────────────────── */
+    .features {
+      padding: 6rem 3rem;
+      background: linear-gradient(180deg, var(--navy) 0%, #0a1522 100%);
+    }
+    .section-label {
+      text-align: center; color: var(--teal);
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700;
+      text-align: center; margin-bottom: 1rem;
+    }
+    .section-sub {
+      text-align: center; color: var(--gray);
+      font-size: 1rem; line-height: 1.6; max-width: 520px; margin: 0 auto 3.5rem;
+    }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+    }
+    .feat-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0,194,203,0.1);
+      border-radius: 14px; padding: 2rem;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .feat-card:hover { border-color: rgba(0,194,203,0.4); transform: translateY(-3px); }
+    .feat-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(0,194,203,0.12);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.2rem; font-size: 1.4rem;
+    }
+    .feat-card h3 {
+      font-size: 1.05rem; font-weight: 600; margin-bottom: 0.6rem;
+    }
+    .feat-card p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; }
+
+    /* ── HOW IT WORKS ────────────────────────────────── */
+    .how {
+      padding: 6rem 3rem;
+      background: #0a1522;
+    }
+    .steps { display: flex; gap: 0; max-width: 900px; margin: 0 auto; position: relative; }
+    .steps::before {
+      content: '';
+      position: absolute; top: 28px; left: 60px; right: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--teal), rgba(0,194,203,0.1));
+    }
+    .step {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 0 1rem; position: relative;
+    }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--slate); border: 2px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700;
+      color: var(--teal); margin-bottom: 1.2rem; position: relative; z-index: 1;
+    }
+    .step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.84rem; color: var(--gray); line-height: 1.55; }
+
+    /* ── PAGES PREVIEW ───────────────────────────────── */
+    .pages-preview {
+      padding: 6rem 3rem;
+      background: var(--navy);
+    }
+    .pages-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem; max-width: 1000px; margin: 0 auto;
+    }
+    .page-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; overflow: hidden;
+      text-decoration: none; transition: border-color 0.2s, transform 0.2s;
+      display: block;
+    }
+    .page-card:hover { border-color: var(--teal); transform: translateY(-4px); }
+    .page-card-top {
+      height: 90px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+    }
+    .page-card-body { padding: 1rem 1.2rem 1.3rem; }
+    .page-card-body h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .page-card-body p { font-size: 0.8rem; color: var(--gray); }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+      padding: 2rem 3rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex; align-items: center; justify-content: space-between;
+      color: var(--gray); font-size: 0.82rem;
+    }
+    footer .nav-logo { font-size: 1.1rem; }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { display: none; }
+      .hero { flex-direction: column; padding: 6rem 1.5rem 3rem; text-align: center; }
+      .hero-text { max-width: 100%; }
+      .hero p { max-width: 100%; }
+      .hero-actions { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-visual { margin-top: 2rem; }
+      .steps { flex-direction: column; gap: 2rem; }
+      .steps::before { display: none; }
+      .features, .how, .pages-preview { padding: 4rem 1.5rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Nest<span>IQ</span></div>
+  <ul class="nav-links">
+    <li><a href="residents.html">Residents</a></li>
+    <li><a href="maintenance.html">Maintenance</a></li>
+    <li><a href="community.html">Community</a></li>
+    <li><a href="assistant.html">AI Assistant</a></li>
+  </ul>
+  <a href="residents.html" class="nav-cta">Enter Portal</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">
+      <span class="pulse-dot"></span>
+      AI-Powered Platform — Live
+    </div>
+    <h1>Your Building,<br><em>Intelligently</em><br>Managed</h1>
+    <p>NestIQ brings residents, management, and maintenance into one AI-assisted platform — so living here feels effortless, and running this building feels easy.</p>
+    <div class="hero-actions">
+      <a href="residents.html" class="btn-primary">Resident Portal →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">248</span>
+        <span class="stat-label">Residents</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Active Towers</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">98%</span>
+        <span class="stat-label">Satisfaction</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Building Illustration -->
+  <div class="hero-visual">
+    <div class="building-wrap">
+      <svg width="340" height="400" viewBox="0 0 340 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ground -->
+        <rect x="0" y="375" width="340" height="25" rx="0" fill="#0D1B2A"/>
+        <rect x="0" y="370" width="340" height="8" rx="2" fill="#1B3A6B" opacity="0.5"/>
+
+        <!-- Building A (left) -->
+        <rect x="30" y="160" width="80" height="215" rx="4" fill="#122238" stroke="#1B3A6B" stroke-width="1.5"/>
+        <!-- Windows A -->
+        <rect class="win-light" x="42" y="180" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.85"/>
+        <rect x="62" y="180" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="82" y="180" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.6"/>
+        <rect x="42" y="212" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="62" y="212" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.9"/>
+        <rect x="82" y="212" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="42" y="244" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.7"/>
+        <rect x="62" y="244" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect x="82" y="244" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect x="42" y="276" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="62" y="276" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.8"/>
+        <rect x="82" y="276" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <!-- Roof A -->
+        <rect x="30" y="148" width="80" height="14" rx="3" fill="#1B3A6B"/>
+        <rect x="55" y="120" width="30" height="30" rx="2" fill="#122238" stroke="#1B3A6B" stroke-width="1.5"/>
+
+        <!-- Building B (center, tallest) -->
+        <rect x="130" y="60" width="80" height="315" rx="4" fill="#0f1d2f" stroke="#1B3A6B" stroke-width="1.5"/>
+        <!-- Windows B -->
+        <rect class="win-light" x="142" y="80" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.9"/>
+        <rect x="162" y="80" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="182" y="80" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.5"/>
+        <rect x="142" y="108" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="162" y="108" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.85"/>
+        <rect class="win-light" x="182" y="108" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.6"/>
+        <rect class="win-light" x="142" y="136" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.7"/>
+        <rect x="162" y="136" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <rect x="182" y="136" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <rect x="142" y="164" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="162" y="164" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.9"/>
+        <rect x="182" y="164" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="142" y="192" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.65"/>
+        <rect x="162" y="192" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="182" y="192" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.8"/>
+        <rect x="142" y="220" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="162" y="220" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.75"/>
+        <rect x="182" y="220" width="14" height="16" rx="2" fill="#1B3A6B"/>
+        <!-- Antenna -->
+        <rect x="169" y="28" width="3" height="34" rx="1" fill="#1B3A6B"/>
+        <circle cx="170.5" cy="26" r="5" fill="#00C2CB" opacity="0.9"/>
+        <!-- Roof B -->
+        <rect x="130" y="48" width="80" height="14" rx="3" fill="#1B3A6B"/>
+
+        <!-- Building C (right) -->
+        <rect x="230" y="120" width="80" height="255" rx="4" fill="#122238" stroke="#1B3A6B" stroke-width="1.5"/>
+        <!-- Windows C -->
+        <rect class="win-light" x="242" y="140" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.7"/>
+        <rect x="262" y="140" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="282" y="140" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.85"/>
+        <rect x="242" y="172" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="262" y="172" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.6"/>
+        <rect x="282" y="172" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="242" y="204" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.9"/>
+        <rect x="262" y="204" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect x="282" y="204" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect x="242" y="236" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <rect class="win-light" x="262" y="236" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.8"/>
+        <rect x="282" y="236" width="14" height="18" rx="2" fill="#1B3A6B"/>
+        <!-- Roof C -->
+        <rect x="230" y="108" width="80" height="14" rx="3" fill="#1B3A6B"/>
+
+        <!-- Ground floor detail -->
+        <rect x="30" y="345" width="80" height="30" rx="0" fill="#0f1d2f"/>
+        <rect x="60" y="348" width="22" height="27" rx="2" fill="#1B3A6B"/>
+        <rect x="130" y="345" width="80" height="30" rx="0" fill="#0a1622"/>
+        <rect x="161" y="348" width="20" height="27" rx="2" fill="#1B3A6B"/>
+        <rect x="230" y="345" width="80" height="30" rx="0" fill="#0f1d2f"/>
+        <rect x="260" y="348" width="22" height="27" rx="2" fill="#1B3A6B"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="section-label">What NestIQ Does</p>
+  <h2 class="section-title">Every part of building life, connected</h2>
+  <p class="section-sub">From rent reminders to rooftop bookings, NestIQ handles the operations so you can focus on what matters.</p>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🤖</div>
+      <h3>AI Maintenance Triage</h3>
+      <p>Submit a photo of the issue — our AI classifies urgency, assigns the right team, and tracks resolution end-to-end.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🏠</div>
+      <h3>Resident Self-Service</h3>
+      <p>Residents manage leases, pay rent, raise complaints, and access documents — 24 hours a day, no calls required.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📢</div>
+      <h3>Community Board</h3>
+      <p>Announcements, polls, event bookings, and neighbour connections, all in a moderated digital common space.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <h3>Admin Intelligence</h3>
+      <p>Occupancy trends, payment health, and maintenance bottlenecks surfaced automatically — so nothing slips through.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔔</div>
+      <h3>Smart Alerts</h3>
+      <p>Proactive nudges for overdue rent, expiring leases, and unresolved tickets before they become real problems.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔐</div>
+      <h3>Role-Based Access</h3>
+      <p>Residents, staff, and admins each see exactly what they need — nothing more, nothing less.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <p class="section-label">How It Works</p>
+  <h2 class="section-title">Three steps to a smarter building</h2>
+  <p class="section-sub" style="margin-bottom:3.5rem;">Getting started takes minutes, not months.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>Register Your Property</h4>
+      <p>Add your towers, floors, and units. Import existing resident data in one go.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>Invite Residents</h4>
+      <p>Residents get a link to set up their own account — no app download needed.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>AI Takes Over the Routine</h4>
+      <p>Reminders, ticket routing, and community moderation happen automatically.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h4>You Stay in Control</h4>
+      <p>Override anything from the Admin panel. Full audit log. Always transparent.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PAGES PREVIEW -->
+<section class="pages-preview">
+  <p class="section-label">Explore the Platform</p>
+  <h2 class="section-title">Jump to any section</h2>
+  <p class="section-sub" style="margin-bottom:3rem;">Each area of NestIQ is purpose-built for its users.</p>
+  <div class="pages-grid">
+    <a href="residents.html" class="page-card">
+      <div class="page-card-top" style="background:rgba(0,194,203,0.1);">🏠</div>
+      <div class="page-card-body">
+        <h4>Resident Portal</h4>
+        <p>Pay rent, raise requests, view lease details and documents.</p>
+      </div>
+    </a>
+    <a href="maintenance.html" class="page-card">
+      <div class="page-card-top" style="background:rgba(255,165,0,0.08);">🔧</div>
+      <div class="page-card-body">
+        <h4>Maintenance</h4>
+        <p>Log issues, track progress, and communicate with the team.</p>
+      </div>
+    </a>
+    <a href="community.html" class="page-card">
+      <div class="page-card-top" style="background:rgba(100,200,120,0.08);">📢</div>
+      <div class="page-card-body">
+        <h4>Community</h4>
+        <p>Announcements, polls, events, and neighbour discussions.</p>
+      </div>
+    </a>
+    <a href="admin.html" class="page-card">
+      <div class="page-card-top" style="background:rgba(180,100,255,0.08);">⚙️</div>
+      <div class="page-card-body">
+        <h4>Admin Panel</h4>
+        <p>Full oversight: occupancy, finances, staff, and AI insights.</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="nav-logo">Nest<span>IQ</span></div>
+  <span>FSD Lab Exercise · 2025 · AI-Powered Community Platform</span>
+  <span>Built with HTML / CSS / JS</span>
+</footer>
+
+</body>
+</html>
