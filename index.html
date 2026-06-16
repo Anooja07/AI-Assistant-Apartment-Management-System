@@ -3,503 +3,1330 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NestIQ — Smart Apartment Management</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <title>NestIQ - Apartment Society Management SPA</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
+    * { margin: 0; }
 
     :root {
-      --navy:    #0D1B2A;
-      --slate:   #1B3A6B;
-      --teal:    #00C2CB;
-      --teal2:   #00898f;
-      --white:   #F0F4F8;
-      --gray:    #8899AA;
-      --card-bg: #122238;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #eef3f8;
+      --text: #17202a;
+      --muted: #617083;
+      --line: #d9e1ea;
+      --brand: #0f766e;
+      --brand-2: #2563eb;
+      --accent: #f59e0b;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --shadow: 0 18px 45px rgba(30, 41, 59, 0.12);
+    }
+
+    body.dark {
+      --bg: #10151d;
+      --surface: #17202b;
+      --surface-2: #202b38;
+      --text: #f5f7fb;
+      --muted: #a7b4c4;
+      --line: #2e3a49;
+      --brand: #2dd4bf;
+      --brand-2: #60a5fa;
+      --accent: #fbbf24;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--navy);
-      color: var(--white);
-      overflow-x: hidden;
-    }
-
-    /* ── NAV ─────────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 3rem;
-      background: rgba(13,27,42,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,194,203,0.12);
-    }
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem; font-weight: 900;
-      color: var(--teal); letter-spacing: -0.5px;
-    }
-    .nav-logo span { color: var(--white); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      color: var(--gray); text-decoration: none;
-      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.3px;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--teal); }
-    .nav-cta {
-      background: var(--teal); color: var(--navy);
-      padding: 0.55rem 1.4rem; border-radius: 6px;
-      font-weight: 600; font-size: 0.88rem; text-decoration: none;
-      transition: background 0.2s;
-    }
-    .nav-cta:hover { background: #00a8af; }
-
-    /* ── HERO ────────────────────────────────────────── */
-    .hero {
       min-height: 100vh;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8rem 3rem 4rem;
-      position: relative; overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
     }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem clamp(1rem, 4vw, 3rem);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      font-size: 1.15rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      list-style: none;
+      padding: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0.45rem 0.75rem;
+      color: var(--muted);
+      border-radius: 7px;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .icon-btn,
+    .primary-btn,
+    .secondary-btn,
+    .ghost-btn {
+      min-height: 40px;
+      border-radius: 8px;
+      font-weight: 800;
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .icon-btn {
+      width: 40px;
+      display: grid;
+      place-items: center;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .primary-btn {
+      background: var(--brand);
+      color: white;
+      padding: 0 1rem;
+    }
+
+    .secondary-btn {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      padding: 0 1rem;
+    }
+
+    .ghost-btn {
+      background: transparent;
+      color: var(--brand);
+      padding: 0 0.35rem;
+    }
+
+    .primary-btn:hover,
+    .secondary-btn:hover,
+    .icon-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      gap: 2rem;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      min-height: calc(100vh - 68px);
+      overflow: hidden;
+    }
+
     .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(27,58,107,0.45) 0%, transparent 70%);
-      pointer-events: none;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--bg) 94%, transparent) 0 45%, color-mix(in srgb, var(--brand-2) 16%, transparent)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 700'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop stop-color='%23dbeafe'/%3E%3Cstop offset='1' stop-color='%23f8fafc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='700' fill='url(%23sky)'/%3E%3Crect x='660' y='105' width='150' height='480' rx='8' fill='%2394a3b8'/%3E%3Crect x='830' y='70' width='205' height='515' rx='8' fill='%237c8da5'/%3E%3Crect x='520' y='190' width='120' height='395' rx='8' fill='%23aab7c7'/%3E%3Crect x='1060' y='175' width='80' height='410' rx='8' fill='%239aa8ba'/%3E%3Cg fill='%23e0f2fe'%3E%3Crect x='685' y='135' width='28' height='34' rx='3'/%3E%3Crect x='735' y='135' width='28' height='34' rx='3'/%3E%3Crect x='685' y='200' width='28' height='34' rx='3'/%3E%3Crect x='735' y='200' width='28' height='34' rx='3'/%3E%3Crect x='685' y='265' width='28' height='34' rx='3'/%3E%3Crect x='735' y='265' width='28' height='34' rx='3'/%3E%3Crect x='870' y='115' width='32' height='34' rx='3'/%3E%3Crect x='930' y='115' width='32' height='34' rx='3'/%3E%3Crect x='870' y='185' width='32' height='34' rx='3'/%3E%3Crect x='930' y='185' width='32' height='34' rx='3'/%3E%3Crect x='870' y='255' width='32' height='34' rx='3'/%3E%3Crect x='930' y='255' width='32' height='34' rx='3'/%3E%3Crect x='548' y='230' width='25' height='32' rx='3'/%3E%3Crect x='590' y='230' width='25' height='32' rx='3'/%3E%3Crect x='548' y='295' width='25' height='32' rx='3'/%3E%3Crect x='590' y='295' width='25' height='32' rx='3'/%3E%3C/g%3E%3Cpath d='M0 587h1200v113H0z' fill='%2322c55e'/%3E%3Cpath d='M0 610c110-35 208-18 300-5 136 20 243-33 374-18 158 18 305 3 526-45v158H0z' fill='%2315803d' opacity='.85'/%3E%3Cpath d='M700 700c30-105 132-150 255-150 116 0 200 41 245 118v32z' fill='%239ca3af'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center right;
+      z-index: -1;
     }
 
-    .hero-text { flex: 0 0 52%; max-width: 560px; position: relative; z-index: 2; }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: rgba(0,194,203,0.1); border: 1px solid rgba(0,194,203,0.3);
-      color: var(--teal); padding: 0.35rem 0.9rem; border-radius: 20px;
-      font-size: 0.78rem; font-weight: 600; letter-spacing: 1.2px;
-      text-transform: uppercase; margin-bottom: 1.5rem;
+    .hero-copy {
+      width: min(100%, 680px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: 1rem 0;
     }
-    .pulse-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--teal); animation: pulse 1.8s ease-in-out infinite;
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      gap: 0.45rem;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--brand);
+      font-weight: 800;
+      font-size: 0.8rem;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.7); }
-    }
+
     .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.6rem, 5vw, 3.9rem);
-      font-weight: 900; line-height: 1.1;
-      margin-bottom: 1.4rem;
+      max-width: 640px;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      line-height: 1;
+      letter-spacing: 0;
     }
-    .hero h1 em { color: var(--teal); font-style: normal; }
+
     .hero p {
-      color: var(--gray); font-size: 1.05rem; line-height: 1.7;
-      margin-bottom: 2.2rem; max-width: 440px;
-    }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn-primary {
-      background: var(--teal); color: var(--navy);
-      padding: 0.8rem 1.9rem; border-radius: 8px;
-      font-weight: 700; font-size: 0.95rem; text-decoration: none;
-      transition: transform 0.15s, background 0.2s;
-      display: inline-block;
-    }
-    .btn-primary:hover { background: #00a8af; transform: translateY(-1px); }
-    .btn-outline {
-      border: 1px solid rgba(0,194,203,0.4); color: var(--teal);
-      padding: 0.8rem 1.9rem; border-radius: 8px;
-      font-weight: 600; font-size: 0.95rem; text-decoration: none;
-      transition: border-color 0.2s, background 0.2s; display: inline-block;
-    }
-    .btn-outline:hover { border-color: var(--teal); background: rgba(0,194,203,0.06); }
-
-    /* Building SVG illustration */
-    .hero-visual {
-      flex: 0 0 44%; display: flex; align-items: flex-end;
-      justify-content: center; position: relative; z-index: 2;
-    }
-    .building-wrap { position: relative; }
-    .building-wrap svg { display: block; }
-    .win-light {
-      animation: winkle 3s ease-in-out infinite;
-    }
-    .win-light:nth-child(2) { animation-delay: 0.7s; }
-    .win-light:nth-child(3) { animation-delay: 1.4s; }
-    .win-light:nth-child(4) { animation-delay: 2.1s; }
-    @keyframes winkle {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.2; }
+      max-width: 570px;
+      color: var(--muted);
+      font-size: 1.08rem;
     }
 
-    /* stats row */
-    .hero-stats {
-      display: flex; gap: 2.5rem; margin-top: 3rem;
-      padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.07);
+    .hero-actions,
+    .quick-actions,
+    .resident-row,
+    .modal-actions,
+    .chat-form {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
-    .stat-item { display: flex; flex-direction: column; gap: 0.2rem; }
-    .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem; font-weight: 700; color: var(--white);
-    }
-    .stat-label { font-size: 0.78rem; color: var(--gray); letter-spacing: 0.5px; }
 
-    /* ── FEATURES ────────────────────────────────────── */
-    .features {
-      padding: 6rem 3rem;
-      background: linear-gradient(180deg, var(--navy) 0%, #0a1522 100%);
+    .hero-panel {
+      align-self: center;
+      margin-left: auto;
+      width: min(100%, 430px);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
     }
-    .section-label {
-      text-align: center; color: var(--teal);
-      font-size: 0.78rem; font-weight: 600;
-      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem;
-    }
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700;
-      text-align: center; margin-bottom: 1rem;
-    }
-    .section-sub {
-      text-align: center; color: var(--gray);
-      font-size: 1rem; line-height: 1.6; max-width: 520px; margin: 0 auto 3.5rem;
-    }
-    .features-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem; max-width: 1100px; margin: 0 auto;
-    }
-    .feat-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(0,194,203,0.1);
-      border-radius: 14px; padding: 2rem;
-      transition: border-color 0.25s, transform 0.25s;
-    }
-    .feat-card:hover { border-color: rgba(0,194,203,0.4); transform: translateY(-3px); }
-    .feat-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      background: rgba(0,194,203,0.12);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1.2rem; font-size: 1.4rem;
-    }
-    .feat-card h3 {
-      font-size: 1.05rem; font-weight: 600; margin-bottom: 0.6rem;
-    }
-    .feat-card p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; }
 
-    /* ── HOW IT WORKS ────────────────────────────────── */
-    .how {
-      padding: 6rem 3rem;
-      background: #0a1522;
+    .hero-panel h2,
+    .panel h2 {
+      font-size: 1rem;
+      margin-bottom: 0.85rem;
     }
-    .steps { display: flex; gap: 0; max-width: 900px; margin: 0 auto; position: relative; }
-    .steps::before {
-      content: '';
-      position: absolute; top: 28px; left: 60px; right: 60px; height: 2px;
-      background: linear-gradient(90deg, var(--teal), rgba(0,194,203,0.1));
-    }
-    .step {
-      flex: 1; display: flex; flex-direction: column; align-items: center;
-      text-align: center; padding: 0 1rem; position: relative;
-    }
-    .step-num {
-      width: 56px; height: 56px; border-radius: 50%;
-      background: var(--slate); border: 2px solid var(--teal);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700;
-      color: var(--teal); margin-bottom: 1.2rem; position: relative; z-index: 1;
-    }
-    .step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
-    .step p { font-size: 0.84rem; color: var(--gray); line-height: 1.55; }
 
-    /* ── PAGES PREVIEW ───────────────────────────────── */
-    .pages-preview {
-      padding: 6rem 3rem;
-      background: var(--navy);
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
     }
-    .pages-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.2rem; max-width: 1000px; margin: 0 auto;
+
+    .metric {
+      padding: 0.9rem;
+      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
     }
-    .page-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px; overflow: hidden;
-      text-decoration: none; transition: border-color 0.2s, transform 0.2s;
+
+    .metric strong {
       display: block;
+      font-size: 1.45rem;
+      line-height: 1.15;
     }
-    .page-card:hover { border-color: var(--teal); transform: translateY(-4px); }
-    .page-card-top {
-      height: 90px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2rem;
-    }
-    .page-card-body { padding: 1rem 1.2rem 1.3rem; }
-    .page-card-body h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
-    .page-card-body p { font-size: 0.8rem; color: var(--gray); }
 
-    /* ── FOOTER ──────────────────────────────────────── */
+    .metric span,
+    .small-text {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .main {
+      padding: 0 clamp(1rem, 4vw, 3rem) 3rem;
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .section {
+      scroll-margin-top: 86px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .resident-list,
+    .ticket-list,
+    .announcement-list,
+    .amenity-list {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .resident-card,
+    .ticket-card,
+    .announcement-card,
+    .amenity-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+    }
+
+    .resident-meta,
+    .ticket-meta,
+    .amenity-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      flex: 0 0 auto;
+      font-weight: 800;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--brand) 14%, transparent);
+      color: var(--brand);
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge.warning {
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      color: #a16207;
+    }
+
+    .badge.danger {
+      background: color-mix(in srgb, var(--danger) 14%, transparent);
+      color: var(--danger);
+    }
+
+    .drop-zone {
+      min-height: 182px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 2px dashed var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+      padding: 1rem;
+      color: var(--muted);
+    }
+
+    .drop-zone.drag-over {
+      border-color: var(--brand);
+      color: var(--brand);
+      background: color-mix(in srgb, var(--brand) 10%, var(--surface));
+    }
+
+    .ticket-card {
+      cursor: grab;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .kanban-column {
+      min-height: 250px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+      padding: 0.75rem;
+    }
+
+    .kanban-column h3 {
+      font-size: 0.92rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .kanban-column.drag-over {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+    }
+
+    .map-box {
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--brand) 12%, transparent) 1px, transparent 1px),
+        linear-gradient(color-mix(in srgb, var(--brand-2) 12%, transparent) 1px, transparent 1px),
+        var(--surface-2);
+      background-size: 34px 34px;
+    }
+
+    .chat-window {
+      height: 320px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+      padding: 0.75rem;
+    }
+
+    .chat-message {
+      max-width: 82%;
+      align-self: flex-start;
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      font-size: 0.92rem;
+    }
+
+    .chat-message.self {
+      align-self: flex-end;
+      background: var(--brand);
+      border-color: var(--brand);
+      color: white;
+    }
+
+    .chat-message small {
+      display: block;
+      margin-top: 0.25rem;
+      opacity: 0.72;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      padding: 0.65rem 0.75rem;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    label {
+      display: grid;
+      gap: 0.35rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.58);
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(100%, 540px);
+      max-height: min(86vh, 720px);
+      overflow: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-header,
+    .modal-body {
+      padding: 1rem;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .toast {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 50;
+      display: grid;
+      gap: 0.5rem;
+      width: min(360px, calc(100vw - 2rem));
+    }
+
+    .toast-item {
+      padding: 0.8rem 0.9rem;
+      border-radius: 8px;
+      color: white;
+      background: #17202a;
+      box-shadow: var(--shadow);
+    }
+
     footer {
-      padding: 2rem 3rem;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      display: flex; align-items: center; justify-content: space-between;
-      color: var(--gray); font-size: 0.82rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.25rem clamp(1rem, 4vw, 3rem);
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+      font-size: 0.9rem;
     }
-    footer .nav-logo { font-size: 1.1rem; }
 
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.2rem; }
-      .nav-links { display: none; }
-      .hero { flex-direction: column; padding: 6rem 1.5rem 3rem; text-align: center; }
-      .hero-text { max-width: 100%; }
-      .hero p { max-width: 100%; }
-      .hero-actions { justify-content: center; }
-      .hero-stats { justify-content: center; }
-      .hero-visual { margin-top: 2rem; }
-      .steps { flex-direction: column; gap: 2rem; }
-      .steps::before { display: none; }
-      .features, .how, .pages-preview { padding: 4rem 1.5rem; }
-      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    @media (max-width: 960px) {
+      .hero,
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      .hero-panel {
+        margin-left: 0;
+      }
+
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .navbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .section-header,
+      .resident-card,
+      .ticket-card,
+      .announcement-card,
+      .amenity-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .form-grid,
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="app-shell">
+    <nav class="navbar" aria-label="Primary navigation">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span>NestIQ Society</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#residents">Residents</a></li>
+        <li><a href="#maintenance">Maintenance</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#assistant">Chat</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="icon-btn" id="themeBtn" title="Switch theme" aria-label="Switch theme">◐</button>
+        <button class="icon-btn" id="notifyBtn" title="Enable notifications" aria-label="Enable notifications">🔔</button>
+        <button class="primary-btn" data-modal="residentModal">Add Resident</button>
+      </div>
+    </nav>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">Nest<span>IQ</span></div>
-  <ul class="nav-links">
-    <li><a href="residents.html">Residents</a></li>
-    <li><a href="maintenance.html">Maintenance</a></li>
-    <li><a href="community.html">Community</a></li>
-    <li><a href="assistant.html">AI Assistant</a></li>
-  </ul>
-  <a href="residents.html" class="nav-cta">Enter Portal</a>
-</nav>
+    <header class="hero section" id="home">
+      <div class="hero-copy">
+        <span class="eyebrow"><span aria-hidden="true">●</span> Live apartment operations</span>
+        <h1>One-page society command center for residents, staff, and managers.</h1>
+        <p>Manage units, visitors, maintenance, amenities, announcements, live chat, location-aware emergency support, and resident preferences from a single responsive SPA.</p>
+        <div class="hero-actions">
+          <button class="primary-btn" data-modal="ticketModal">Raise Issue</button>
+          <button class="secondary-btn" data-modal="amenityModal">Book Amenity</button>
+          <button class="secondary-btn" id="locateBtn">Locate Society Gate</button>
+        </div>
+        <p class="small-text" id="lastVisitText">Preparing your resident workspace...</p>
+      </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-text">
-    <div class="hero-eyebrow">
-      <span class="pulse-dot"></span>
-      AI-Powered Platform — Live
-    </div>
-    <h1>Your Building,<br><em>Intelligently</em><br>Managed</h1>
-    <p>NestIQ brings residents, management, and maintenance into one AI-assisted platform — so living here feels effortless, and running this building feels easy.</p>
-    <div class="hero-actions">
-      <a href="residents.html" class="btn-primary">Resident Portal →</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-num">248</span>
-        <span class="stat-label">Residents</span>
+      <aside class="hero-panel" aria-label="Society status">
+        <h2>Today at GreenView Heights</h2>
+        <div class="status-grid">
+          <div class="metric"><strong id="residentCount">0</strong><span>Active residents</span></div>
+          <div class="metric"><strong id="ticketCount">0</strong><span>Open service tickets</span></div>
+          <div class="metric"><strong id="amenityCount">0</strong><span>Amenities booked</span></div>
+          <div class="metric"><strong id="socketStatus">Offline</strong><span>Society socket</span></div>
+        </div>
+      </aside>
+    </header>
+
+    <main class="main">
+      <section class="section" id="residents">
+        <div class="section-header">
+          <div>
+            <p class="small-text">LocalStorage resident registry</p>
+            <h2>Residents and Units</h2>
+          </div>
+          <button class="primary-btn" data-modal="residentModal">New Resident</button>
+        </div>
+        <div class="grid-layout">
+          <div class="panel">
+            <h2>Resident Directory</h2>
+            <div class="resident-list" id="residentList"></div>
+          </div>
+          <div class="panel">
+            <h2>Visitor Cookie Pass</h2>
+            <p class="small-text">A short-lived visitor preference is stored in a browser cookie so the gate desk can remember the selected tower during this visit.</p>
+            <div style="height: 0.8rem"></div>
+            <label>
+              Gate tower
+              <select id="towerCookie">
+                <option value="A">Tower A</option>
+                <option value="B">Tower B</option>
+                <option value="C">Tower C</option>
+              </select>
+            </label>
+            <div style="height: 0.8rem"></div>
+            <button class="secondary-btn" id="saveCookieBtn">Save Gate Cookie</button>
+            <p class="small-text" id="cookieText" style="margin-top:0.8rem"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="maintenance">
+        <div class="section-header">
+          <div>
+            <p class="small-text">Drag and Drop maintenance workflow</p>
+            <h2>Service Desk</h2>
+          </div>
+          <button class="primary-btn" data-modal="ticketModal">Raise Ticket</button>
+        </div>
+        <div class="grid-layout">
+          <div class="panel">
+            <div class="columns" id="kanbanBoard">
+              <div class="kanban-column" data-status="New"><h3>New</h3><div class="ticket-list"></div></div>
+              <div class="kanban-column" data-status="Assigned"><h3>Assigned</h3><div class="ticket-list"></div></div>
+              <div class="kanban-column" data-status="Resolved"><h3>Resolved</h3><div class="ticket-list"></div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Attach Photo or Report</h2>
+            <div class="drop-zone" id="fileDrop">
+              <div>
+                <strong>Drop maintenance evidence here</strong>
+                <p class="small-text">The file name is saved with the draft ticket in this browser session.</p>
+                <p id="dropResult" class="small-text"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="community">
+        <div class="section-header">
+          <div>
+            <p class="small-text">SessionStorage announcements and amenity flow</p>
+            <h2>Community Board</h2>
+          </div>
+          <div class="quick-actions">
+            <button class="secondary-btn" data-modal="announceModal">Post Notice</button>
+            <button class="primary-btn" data-modal="amenityModal">Book Amenity</button>
+          </div>
+        </div>
+        <div class="grid-layout">
+          <div class="panel">
+            <h2>Announcements</h2>
+            <div class="announcement-list" id="announcementList"></div>
+          </div>
+          <div class="panel">
+            <h2>Amenity Bookings</h2>
+            <div class="amenity-list" id="amenityList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="assistant">
+        <div class="section-header">
+          <div>
+            <p class="small-text">WebSocket-ready society chat with local fallback</p>
+            <h2>Socket Chat and Emergency Location</h2>
+          </div>
+          <button class="secondary-btn" id="pingSocketBtn">Ping Socket</button>
+        </div>
+        <div class="grid-layout">
+          <div class="panel">
+            <h2>Resident Helpdesk Chat</h2>
+            <div class="chat-window" id="chatWindow" aria-live="polite"></div>
+            <form class="chat-form" id="chatForm" style="margin-top:0.75rem">
+              <input id="chatInput" placeholder="Message security, maintenance, or admin..." autocomplete="off" />
+              <button class="primary-btn" type="submit">Send</button>
+            </form>
+          </div>
+          <div class="panel">
+            <h2>Geolocation Dispatch</h2>
+            <div class="map-box">
+              <div>
+                <strong>Nearest support route</strong>
+                <p class="small-text" id="geoText">Use location to help security dispatch staff to the right gate or block.</p>
+              </div>
+              <button class="secondary-btn" id="geoBtn">Use My Location</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>NestIQ Society SPA</span>
+      <span>Flexbox shell, CSS Grid sections, Cookie, LocalStorage, SessionStorage, Notification, Drag and Drop, WebSocket, Theme, Last Visit, and Geolocation APIs.</span>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop" id="residentModal" role="dialog" aria-modal="true" aria-labelledby="residentTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="residentTitle">Add Resident</h2>
+        <button class="icon-btn" data-close aria-label="Close modal">×</button>
       </div>
-      <div class="stat-item">
-        <span class="stat-num">3</span>
-        <span class="stat-label">Active Towers</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">98%</span>
-        <span class="stat-label">Satisfaction</span>
-      </div>
+      <form class="modal-body" id="residentForm">
+        <div class="form-grid">
+          <label>Name<input name="name" required placeholder="Aarav Mehta" /></label>
+          <label>Unit<input name="unit" required placeholder="B-1204" /></label>
+          <label>Role<select name="role"><option>Owner</option><option>Tenant</option><option>Committee</option></select></label>
+          <label>Status<select name="status"><option>Active</option><option>Pending KYC</option><option>Move-out Scheduled</option></select></label>
+        </div>
+        <div class="modal-actions" style="margin-top:1rem">
+          <button class="primary-btn" type="submit">Save Resident</button>
+          <button class="secondary-btn" type="button" data-close>Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Building Illustration -->
-  <div class="hero-visual">
-    <div class="building-wrap">
-      <svg width="340" height="400" viewBox="0 0 340 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Ground -->
-        <rect x="0" y="375" width="340" height="25" rx="0" fill="#0D1B2A"/>
-        <rect x="0" y="370" width="340" height="8" rx="2" fill="#1B3A6B" opacity="0.5"/>
-
-        <!-- Building A (left) -->
-        <rect x="30" y="160" width="80" height="215" rx="4" fill="#122238" stroke="#1B3A6B" stroke-width="1.5"/>
-        <!-- Windows A -->
-        <rect class="win-light" x="42" y="180" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.85"/>
-        <rect x="62" y="180" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="82" y="180" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.6"/>
-        <rect x="42" y="212" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="62" y="212" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.9"/>
-        <rect x="82" y="212" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="42" y="244" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.7"/>
-        <rect x="62" y="244" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect x="82" y="244" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect x="42" y="276" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="62" y="276" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.8"/>
-        <rect x="82" y="276" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <!-- Roof A -->
-        <rect x="30" y="148" width="80" height="14" rx="3" fill="#1B3A6B"/>
-        <rect x="55" y="120" width="30" height="30" rx="2" fill="#122238" stroke="#1B3A6B" stroke-width="1.5"/>
-
-        <!-- Building B (center, tallest) -->
-        <rect x="130" y="60" width="80" height="315" rx="4" fill="#0f1d2f" stroke="#1B3A6B" stroke-width="1.5"/>
-        <!-- Windows B -->
-        <rect class="win-light" x="142" y="80" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.9"/>
-        <rect x="162" y="80" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="182" y="80" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.5"/>
-        <rect x="142" y="108" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="162" y="108" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.85"/>
-        <rect class="win-light" x="182" y="108" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.6"/>
-        <rect class="win-light" x="142" y="136" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.7"/>
-        <rect x="162" y="136" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <rect x="182" y="136" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <rect x="142" y="164" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="162" y="164" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.9"/>
-        <rect x="182" y="164" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="142" y="192" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.65"/>
-        <rect x="162" y="192" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="182" y="192" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.8"/>
-        <rect x="142" y="220" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="162" y="220" width="14" height="16" rx="2" fill="#00C2CB" opacity="0.75"/>
-        <rect x="182" y="220" width="14" height="16" rx="2" fill="#1B3A6B"/>
-        <!-- Antenna -->
-        <rect x="169" y="28" width="3" height="34" rx="1" fill="#1B3A6B"/>
-        <circle cx="170.5" cy="26" r="5" fill="#00C2CB" opacity="0.9"/>
-        <!-- Roof B -->
-        <rect x="130" y="48" width="80" height="14" rx="3" fill="#1B3A6B"/>
-
-        <!-- Building C (right) -->
-        <rect x="230" y="120" width="80" height="255" rx="4" fill="#122238" stroke="#1B3A6B" stroke-width="1.5"/>
-        <!-- Windows C -->
-        <rect class="win-light" x="242" y="140" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.7"/>
-        <rect x="262" y="140" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="282" y="140" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.85"/>
-        <rect x="242" y="172" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="262" y="172" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.6"/>
-        <rect x="282" y="172" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="242" y="204" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.9"/>
-        <rect x="262" y="204" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect x="282" y="204" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect x="242" y="236" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <rect class="win-light" x="262" y="236" width="14" height="18" rx="2" fill="#00C2CB" opacity="0.8"/>
-        <rect x="282" y="236" width="14" height="18" rx="2" fill="#1B3A6B"/>
-        <!-- Roof C -->
-        <rect x="230" y="108" width="80" height="14" rx="3" fill="#1B3A6B"/>
-
-        <!-- Ground floor detail -->
-        <rect x="30" y="345" width="80" height="30" rx="0" fill="#0f1d2f"/>
-        <rect x="60" y="348" width="22" height="27" rx="2" fill="#1B3A6B"/>
-        <rect x="130" y="345" width="80" height="30" rx="0" fill="#0a1622"/>
-        <rect x="161" y="348" width="20" height="27" rx="2" fill="#1B3A6B"/>
-        <rect x="230" y="345" width="80" height="30" rx="0" fill="#0f1d2f"/>
-        <rect x="260" y="348" width="22" height="27" rx="2" fill="#1B3A6B"/>
-      </svg>
+  <div class="modal-backdrop" id="ticketModal" role="dialog" aria-modal="true" aria-labelledby="ticketTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="ticketTitle">Raise Maintenance Ticket</h2>
+        <button class="icon-btn" data-close aria-label="Close modal">×</button>
+      </div>
+      <form class="modal-body" id="ticketForm">
+        <div class="form-grid">
+          <label>Unit<input name="unit" required placeholder="A-0801" /></label>
+          <label>Category<select name="category"><option>Plumbing</option><option>Electrical</option><option>Lift</option><option>Security</option><option>Housekeeping</option></select></label>
+        </div>
+        <label style="margin-top:0.75rem">Issue<textarea name="issue" required placeholder="Describe the issue"></textarea></label>
+        <p class="small-text" id="draftFileText" style="margin-top:0.55rem"></p>
+        <div class="modal-actions" style="margin-top:1rem">
+          <button class="primary-btn" type="submit">Create Ticket</button>
+          <button class="secondary-btn" type="button" data-close>Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
-</section>
 
-<!-- FEATURES -->
-<section class="features">
-  <p class="section-label">What NestIQ Does</p>
-  <h2 class="section-title">Every part of building life, connected</h2>
-  <p class="section-sub">From rent reminders to rooftop bookings, NestIQ handles the operations so you can focus on what matters.</p>
-  <div class="features-grid">
-    <div class="feat-card">
-      <div class="feat-icon">🤖</div>
-      <h3>AI Maintenance Triage</h3>
-      <p>Submit a photo of the issue — our AI classifies urgency, assigns the right team, and tracks resolution end-to-end.</p>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🏠</div>
-      <h3>Resident Self-Service</h3>
-      <p>Residents manage leases, pay rent, raise complaints, and access documents — 24 hours a day, no calls required.</p>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📢</div>
-      <h3>Community Board</h3>
-      <p>Announcements, polls, event bookings, and neighbour connections, all in a moderated digital common space.</p>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📊</div>
-      <h3>Admin Intelligence</h3>
-      <p>Occupancy trends, payment health, and maintenance bottlenecks surfaced automatically — so nothing slips through.</p>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🔔</div>
-      <h3>Smart Alerts</h3>
-      <p>Proactive nudges for overdue rent, expiring leases, and unresolved tickets before they become real problems.</p>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🔐</div>
-      <h3>Role-Based Access</h3>
-      <p>Residents, staff, and admins each see exactly what they need — nothing more, nothing less.</p>
+  <div class="modal-backdrop" id="amenityModal" role="dialog" aria-modal="true" aria-labelledby="amenityTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="amenityTitle">Book Amenity</h2>
+        <button class="icon-btn" data-close aria-label="Close modal">×</button>
+      </div>
+      <form class="modal-body" id="amenityForm">
+        <div class="form-grid">
+          <label>Amenity<select name="name"><option>Clubhouse</option><option>Badminton Court</option><option>Rooftop Lounge</option><option>Community Hall</option></select></label>
+          <label>Date<input name="date" type="date" required /></label>
+          <label>Time<input name="time" type="time" required /></label>
+          <label>Unit<input name="unit" required placeholder="C-0302" /></label>
+        </div>
+        <div class="modal-actions" style="margin-top:1rem">
+          <button class="primary-btn" type="submit">Confirm Booking</button>
+          <button class="secondary-btn" type="button" data-close>Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
-</section>
 
-<!-- HOW IT WORKS -->
-<section class="how">
-  <p class="section-label">How It Works</p>
-  <h2 class="section-title">Three steps to a smarter building</h2>
-  <p class="section-sub" style="margin-bottom:3.5rem;">Getting started takes minutes, not months.</p>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <h4>Register Your Property</h4>
-      <p>Add your towers, floors, and units. Import existing resident data in one go.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <h4>Invite Residents</h4>
-      <p>Residents get a link to set up their own account — no app download needed.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <h4>AI Takes Over the Routine</h4>
-      <p>Reminders, ticket routing, and community moderation happen automatically.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <h4>You Stay in Control</h4>
-      <p>Override anything from the Admin panel. Full audit log. Always transparent.</p>
+  <div class="modal-backdrop" id="announceModal" role="dialog" aria-modal="true" aria-labelledby="announceTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="announceTitle">Post Announcement</h2>
+        <button class="icon-btn" data-close aria-label="Close modal">×</button>
+      </div>
+      <form class="modal-body" id="announceForm">
+        <label>Title<input name="title" required placeholder="Water supply update" /></label>
+        <label style="margin-top:0.75rem">Message<textarea name="message" required placeholder="Notice details"></textarea></label>
+        <div class="modal-actions" style="margin-top:1rem">
+          <button class="primary-btn" type="submit">Publish</button>
+          <button class="secondary-btn" type="button" data-close>Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
-</section>
 
-<!-- PAGES PREVIEW -->
-<section class="pages-preview">
-  <p class="section-label">Explore the Platform</p>
-  <h2 class="section-title">Jump to any section</h2>
-  <p class="section-sub" style="margin-bottom:3rem;">Each area of NestIQ is purpose-built for its users.</p>
-  <div class="pages-grid">
-    <a href="residents.html" class="page-card">
-      <div class="page-card-top" style="background:rgba(0,194,203,0.1);">🏠</div>
-      <div class="page-card-body">
-        <h4>Resident Portal</h4>
-        <p>Pay rent, raise requests, view lease details and documents.</p>
-      </div>
-    </a>
-    <a href="maintenance.html" class="page-card">
-      <div class="page-card-top" style="background:rgba(255,165,0,0.08);">🔧</div>
-      <div class="page-card-body">
-        <h4>Maintenance</h4>
-        <p>Log issues, track progress, and communicate with the team.</p>
-      </div>
-    </a>
-    <a href="community.html" class="page-card">
-      <div class="page-card-top" style="background:rgba(100,200,120,0.08);">📢</div>
-      <div class="page-card-body">
-        <h4>Community</h4>
-        <p>Announcements, polls, events, and neighbour discussions.</p>
-      </div>
-    </a>
-    <a href="admin.html" class="page-card">
-      <div class="page-card-top" style="background:rgba(180,100,255,0.08);">⚙️</div>
-      <div class="page-card-body">
-        <h4>Admin Panel</h4>
-        <p>Full oversight: occupancy, finances, staff, and AI insights.</p>
-      </div>
-    </a>
-  </div>
-</section>
+  <div class="toast" id="toast"></div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="nav-logo">Nest<span>IQ</span></div>
-  <span>FSD Lab Exercise · 2025 · AI-Powered Community Platform</span>
-  <span>Built with HTML / CSS / JS</span>
-</footer>
+  <script>
+    const storageKeys = {
+      residents: "nestiq.residents",
+      tickets: "nestiq.tickets",
+      amenities: "nestiq.amenities",
+      theme: "nestiq.theme",
+      lastVisit: "nestiq.lastVisit",
+      draftFile: "nestiq.draftFile",
+      announcements: "nestiq.announcements"
+    };
 
+    const state = {
+      socket: null,
+      socketReady: false,
+      fallbackChat: false
+    };
+
+    const defaults = {
+      residents: [
+        { id: "resident-1", name: "Ananya Rao", unit: "A-0801", role: "Committee", status: "Active" },
+        { id: "resident-2", name: "Kabir Singh", unit: "B-1204", role: "Owner", status: "Active" },
+        { id: "resident-3", name: "Meera Nair", unit: "C-0302", role: "Tenant", status: "Pending KYC" }
+      ],
+      tickets: [
+        { id: "ticket-1", unit: "A-0801", category: "Lift", issue: "Lift 2 is stopping unevenly on the eighth floor.", status: "New", file: "" },
+        { id: "ticket-2", unit: "B-1204", category: "Plumbing", issue: "Kitchen sink leakage reported after morning supply.", status: "Assigned", file: "" },
+        { id: "ticket-3", unit: "C-0302", category: "Housekeeping", issue: "Corridor cleaning completed after event.", status: "Resolved", file: "" }
+      ],
+      amenities: [
+        { id: "amenity-1", name: "Clubhouse", date: "2026-06-18", time: "18:00", unit: "A-0801" }
+      ],
+      announcements: [
+        { id: "announcement-1", title: "Water Supply Timing", message: "Tank cleaning is scheduled from 10:00 AM to 1:00 PM. Please store water in advance." }
+      ]
+    };
+
+    function makeId(prefix) {
+      if (crypto?.randomUUID) return `${prefix}-${crypto.randomUUID()}`;
+      return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function readStore(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function writeStore(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function readSession(key, fallback) {
+      try {
+        const raw = sessionStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function writeSession(key, value) {
+      sessionStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function setCookie(name, value, days) {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+    }
+
+    function getCookie(name) {
+      return document.cookie.split("; ").reduce((result, pair) => {
+        const [key, value] = pair.split("=");
+        return key === name ? decodeURIComponent(value || "") : result;
+      }, "");
+    }
+
+    function toast(message) {
+      const item = document.createElement("div");
+      item.className = "toast-item";
+      item.textContent = message;
+      document.getElementById("toast").append(item);
+      setTimeout(() => item.remove(), 3600);
+    }
+
+    function notify(title, body) {
+      if (!("Notification" in window)) {
+        toast(body);
+        return;
+      }
+      if (Notification.permission === "granted") {
+        new Notification(title, { body });
+      } else {
+        toast(body);
+      }
+    }
+
+    function openModal(id) {
+      document.getElementById(id)?.classList.add("open");
+    }
+
+    function closeModals() {
+      document.querySelectorAll(".modal-backdrop.open").forEach((modal) => modal.classList.remove("open"));
+    }
+
+    function renderResidents() {
+      const residents = readStore(storageKeys.residents, defaults.residents);
+      const list = document.getElementById("residentList");
+      list.innerHTML = residents.map((resident) => `
+        <article class="resident-card">
+          <div class="resident-meta">
+            <div class="avatar">${resident.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</div>
+            <div>
+              <strong>${resident.name}</strong>
+              <p class="small-text">${resident.unit} · ${resident.role}</p>
+            </div>
+          </div>
+          <span class="badge ${resident.status.includes("Pending") ? "warning" : ""}">${resident.status}</span>
+        </article>
+      `).join("");
+      document.getElementById("residentCount").textContent = residents.length;
+    }
+
+    function renderTickets() {
+      const tickets = readStore(storageKeys.tickets, defaults.tickets);
+      document.querySelectorAll(".kanban-column").forEach((column) => {
+        const status = column.dataset.status;
+        const target = column.querySelector(".ticket-list");
+        target.innerHTML = tickets.filter((ticket) => ticket.status === status).map((ticket) => `
+          <article class="ticket-card" draggable="true" data-ticket-id="${ticket.id}">
+            <div class="ticket-meta">
+              <div class="avatar">${ticket.category[0]}</div>
+              <div>
+                <strong>${ticket.category} · ${ticket.unit}</strong>
+                <p class="small-text">${ticket.issue}</p>
+                ${ticket.file ? `<p class="small-text">Attachment: ${ticket.file}</p>` : ""}
+              </div>
+            </div>
+            <span class="badge ${ticket.status === "New" ? "danger" : ticket.status === "Assigned" ? "warning" : ""}">${ticket.status}</span>
+          </article>
+        `).join("");
+      });
+      document.getElementById("ticketCount").textContent = tickets.filter((ticket) => ticket.status !== "Resolved").length;
+      attachTicketDragHandlers();
+    }
+
+    function renderAmenities() {
+      const amenities = readStore(storageKeys.amenities, defaults.amenities);
+      document.getElementById("amenityList").innerHTML = amenities.map((booking) => `
+        <article class="amenity-card">
+          <div class="amenity-meta">
+            <div class="avatar">★</div>
+            <div>
+              <strong>${booking.name}</strong>
+              <p class="small-text">${booking.date} at ${booking.time} · ${booking.unit}</p>
+            </div>
+          </div>
+          <span class="badge">Booked</span>
+        </article>
+      `).join("");
+      document.getElementById("amenityCount").textContent = amenities.length;
+    }
+
+    function renderAnnouncements() {
+      const announcements = readSession(storageKeys.announcements, defaults.announcements);
+      document.getElementById("announcementList").innerHTML = announcements.map((announcement) => `
+        <article class="announcement-card">
+          <div>
+            <strong>${announcement.title}</strong>
+            <p class="small-text">${announcement.message}</p>
+          </div>
+          <span class="badge">Session</span>
+        </article>
+      `).join("");
+    }
+
+    function renderCookie() {
+      const tower = getCookie("nestiqGateTower") || "Not set";
+      document.getElementById("cookieText").textContent = `Gate desk remembers: ${tower}`;
+      if (tower !== "Not set") document.getElementById("towerCookie").value = tower;
+    }
+
+    function renderLastVisit() {
+      const lastVisit = localStorage.getItem(storageKeys.lastVisit);
+      const now = new Date();
+      document.getElementById("lastVisitText").textContent = lastVisit
+        ? `Last visit: ${new Date(lastVisit).toLocaleString()}`
+        : "First visit detected. Your dashboard preferences will be remembered.";
+      localStorage.setItem(storageKeys.lastVisit, now.toISOString());
+    }
+
+    function applyTheme() {
+      const theme = localStorage.getItem(storageKeys.theme) || "light";
+      document.body.classList.toggle("dark", theme === "dark");
+      document.getElementById("themeBtn").textContent = theme === "dark" ? "☀" : "◐";
+    }
+
+    function addChatMessage(text, who = "self") {
+      const message = document.createElement("div");
+      message.className = `chat-message ${who === "self" ? "self" : ""}`;
+      message.innerHTML = `${text}<small>${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</small>`;
+      document.getElementById("chatWindow").append(message);
+      message.scrollIntoView({ block: "end" });
+    }
+
+    function connectSocket() {
+      try {
+        state.socket = new WebSocket("wss://echo.websocket.events");
+        state.socket.addEventListener("open", () => {
+          state.socketReady = true;
+          state.fallbackChat = false;
+          document.getElementById("socketStatus").textContent = "Online";
+          addChatMessage("Society socket connected.", "system");
+        });
+        state.socket.addEventListener("message", (event) => addChatMessage(`Echo: ${event.data}`, "system"));
+        state.socket.addEventListener("error", useSocketFallback);
+        state.socket.addEventListener("close", useSocketFallback);
+      } catch {
+        useSocketFallback();
+      }
+      setTimeout(() => {
+        if (!state.socketReady) useSocketFallback();
+      }, 1800);
+    }
+
+    function useSocketFallback() {
+      if (state.fallbackChat) return;
+      state.socketReady = false;
+      state.fallbackChat = true;
+      document.getElementById("socketStatus").textContent = "Local";
+      addChatMessage("Live socket is unavailable, using local chat simulation.", "system");
+    }
+
+    function sendSocketMessage(message) {
+      addChatMessage(message, "self");
+      if (state.socketReady && state.socket?.readyState === WebSocket.OPEN) {
+        state.socket.send(message);
+      } else {
+        setTimeout(() => addChatMessage("Helpdesk received your message and will update the ticket queue.", "system"), 650);
+      }
+    }
+
+    function attachTicketDragHandlers() {
+      document.querySelectorAll(".ticket-card").forEach((card) => {
+        card.addEventListener("dragstart", (event) => {
+          event.dataTransfer.setData("text/plain", card.dataset.ticketId);
+        });
+      });
+    }
+
+    function updateTicketStatus(id, status) {
+      const tickets = readStore(storageKeys.tickets, defaults.tickets);
+      const updated = tickets.map((ticket) => ticket.id === id ? { ...ticket, status } : ticket);
+      writeStore(storageKeys.tickets, updated);
+      renderTickets();
+      notify("Ticket Updated", `Ticket moved to ${status}.`);
+    }
+
+    function getLocation() {
+      const geoText = document.getElementById("geoText");
+      if (!navigator.geolocation) {
+        geoText.textContent = "Geolocation is not available in this browser.";
+        return;
+      }
+      geoText.textContent = "Requesting location permission...";
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          geoText.textContent = `Dispatch point captured: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}. Security can route support to the nearest gate.`;
+          toast("Location shared with the society dispatch view.");
+        },
+        () => {
+          geoText.textContent = "Location permission was blocked. Select a tower manually at the gate desk.";
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    }
+
+    function initializeData() {
+      if (!localStorage.getItem(storageKeys.residents)) writeStore(storageKeys.residents, defaults.residents);
+      if (!localStorage.getItem(storageKeys.tickets)) writeStore(storageKeys.tickets, defaults.tickets);
+      if (!localStorage.getItem(storageKeys.amenities)) writeStore(storageKeys.amenities, defaults.amenities);
+      if (!sessionStorage.getItem(storageKeys.announcements)) writeSession(storageKeys.announcements, defaults.announcements);
+    }
+
+    function renderAll() {
+      renderResidents();
+      renderTickets();
+      renderAmenities();
+      renderAnnouncements();
+      renderCookie();
+      renderLastVisit();
+      applyTheme();
+      const draftFile = sessionStorage.getItem(storageKeys.draftFile);
+      document.getElementById("draftFileText").textContent = draftFile ? `Draft attachment: ${draftFile}` : "";
+    }
+
+    document.addEventListener("click", (event) => {
+      const modalButton = event.target.closest("[data-modal]");
+      if (modalButton) openModal(modalButton.dataset.modal);
+      if (event.target.closest("[data-close]")) closeModals();
+      if (event.target.classList.contains("modal-backdrop")) closeModals();
+    });
+
+    document.querySelectorAll(".nav-links a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelectorAll(".nav-links a").forEach((item) => item.classList.remove("active"));
+        link.classList.add("active");
+      });
+    });
+
+    document.getElementById("themeBtn").addEventListener("click", () => {
+      const next = document.body.classList.contains("dark") ? "light" : "dark";
+      localStorage.setItem(storageKeys.theme, next);
+      applyTheme();
+      toast(`${next === "dark" ? "Dark" : "Light"} theme saved.`);
+    });
+
+    document.getElementById("notifyBtn").addEventListener("click", async () => {
+      if (!("Notification" in window)) {
+        toast("Notifications are not supported in this browser.");
+        return;
+      }
+      const permission = await Notification.requestPermission();
+      toast(permission === "granted" ? "Notifications enabled for society updates." : "Notifications were not enabled.");
+    });
+
+    document.getElementById("saveCookieBtn").addEventListener("click", () => {
+      setCookie("nestiqGateTower", document.getElementById("towerCookie").value, 7);
+      renderCookie();
+      toast("Gate tower cookie saved.");
+    });
+
+    document.getElementById("residentForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      const residents = readStore(storageKeys.residents, defaults.residents);
+      residents.push({ id: makeId("resident"), name: form.get("name"), unit: form.get("unit"), role: form.get("role"), status: form.get("status") });
+      writeStore(storageKeys.residents, residents);
+      event.currentTarget.reset();
+      closeModals();
+      renderResidents();
+      notify("Resident Added", "Resident directory was updated.");
+    });
+
+    document.getElementById("ticketForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      const tickets = readStore(storageKeys.tickets, defaults.tickets);
+      tickets.unshift({
+        id: makeId("ticket"),
+        unit: form.get("unit"),
+        category: form.get("category"),
+        issue: form.get("issue"),
+        status: "New",
+        file: sessionStorage.getItem(storageKeys.draftFile) || ""
+      });
+      writeStore(storageKeys.tickets, tickets);
+      sessionStorage.removeItem(storageKeys.draftFile);
+      event.currentTarget.reset();
+      closeModals();
+      renderTickets();
+      notify("Ticket Created", "Maintenance team has a new service request.");
+    });
+
+    document.getElementById("amenityForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      const amenities = readStore(storageKeys.amenities, defaults.amenities);
+      amenities.unshift({ id: makeId("amenity"), name: form.get("name"), date: form.get("date"), time: form.get("time"), unit: form.get("unit") });
+      writeStore(storageKeys.amenities, amenities);
+      event.currentTarget.reset();
+      closeModals();
+      renderAmenities();
+      notify("Amenity Booked", "The booking has been added to the community schedule.");
+    });
+
+    document.getElementById("announceForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      const announcements = readSession(storageKeys.announcements, defaults.announcements);
+      announcements.unshift({ id: makeId("announcement"), title: form.get("title"), message: form.get("message") });
+      writeSession(storageKeys.announcements, announcements);
+      event.currentTarget.reset();
+      closeModals();
+      renderAnnouncements();
+      toast("Announcement stored for this session.");
+    });
+
+    document.querySelectorAll(".kanban-column").forEach((column) => {
+      column.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        column.classList.add("drag-over");
+      });
+      column.addEventListener("dragleave", () => column.classList.remove("drag-over"));
+      column.addEventListener("drop", (event) => {
+        event.preventDefault();
+        column.classList.remove("drag-over");
+        updateTicketStatus(event.dataTransfer.getData("text/plain"), column.dataset.status);
+      });
+    });
+
+    const fileDrop = document.getElementById("fileDrop");
+    fileDrop.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      fileDrop.classList.add("drag-over");
+    });
+    fileDrop.addEventListener("dragleave", () => fileDrop.classList.remove("drag-over"));
+    fileDrop.addEventListener("drop", (event) => {
+      event.preventDefault();
+      fileDrop.classList.remove("drag-over");
+      const file = event.dataTransfer.files[0];
+      if (!file) return;
+      sessionStorage.setItem(storageKeys.draftFile, file.name);
+      document.getElementById("dropResult").textContent = `Ready to attach: ${file.name}`;
+      document.getElementById("draftFileText").textContent = `Draft attachment: ${file.name}`;
+      toast("Attachment saved with your ticket draft.");
+    });
+
+    document.getElementById("chatForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = document.getElementById("chatInput");
+      const message = input.value.trim();
+      if (!message) return;
+      sendSocketMessage(message);
+      input.value = "";
+    });
+
+    document.getElementById("pingSocketBtn").addEventListener("click", () => sendSocketMessage("Status check from NestIQ society dashboard."));
+    document.getElementById("geoBtn").addEventListener("click", getLocation);
+    document.getElementById("locateBtn").addEventListener("click", getLocation);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModals();
+    });
+
+    initializeData();
+    renderAll();
+    connectSocket();
+    setTimeout(() => addChatMessage("Ask about dues, amenities, visitors, maintenance, or emergency routing.", "system"), 300);
+  </script>
 </body>
 </html>
