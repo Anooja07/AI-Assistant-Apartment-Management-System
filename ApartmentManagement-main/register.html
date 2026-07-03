@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NestIQ — Register</title>
+  <link rel="stylesheet" href="register.css" />
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">NestIQ</span>
+    </div>
+    <a href="index.html" class="nav-link">Already a resident? Log in →</a>
+  </nav>
+
+  <!-- ── MAIN LAYOUT ── -->
+  <div class="page-wrapper">
+
+    <!-- LEFT PANEL -->
+    <aside class="hero-panel">
+      <div class="hero-content">
+        <h1 class="hero-title">Greenwood<br/>Heights</h1>
+        <p class="hero-sub">Smart living for a connected community.</p>
+        <ul class="hero-stats">
+          <li><span class="stat-num">420</span><span class="stat-label">Homes</span></li>
+          <li><span class="stat-num">24/7</span><span class="stat-label">Security</span></li>
+          <li><span class="stat-num">14</span><span class="stat-label">Amenities</span></li>
+        </ul>
+        <div class="hero-badge">Resident Portal</div>
+      </div>
+    </aside>
+
+    <!-- RIGHT PANEL — FORM -->
+    <main class="form-panel">
+      <div class="form-container">
+        <h2 class="form-title">Create your resident account</h2>
+        <p class="form-sub">Fill in your details to get access to the society dashboard.</p>
+
+        <form id="registerForm" novalidate>
+
+          <!-- ── ROW 1: Name + Phone ── -->
+          <div class="form-row">
+            <div class="field-group">
+              <label for="fullName">Full Name <span class="req">*</span></label>
+              <input type="text" id="fullName" placeholder="e.g. Anooja Krishnan" autocomplete="name" />
+              <span class="err" id="err-fullName"></span>
+            </div>
+            <div class="field-group">
+              <label for="phone">Phone Number <span class="req">*</span></label>
+              <input type="text" id="phone" placeholder="10-digit mobile number" maxlength="10" />
+              <span class="err" id="err-phone"></span>
+            </div>
+          </div>
+
+          <!-- ── ROW 2: Email ── -->
+          <div class="form-row">
+            <div class="field-group full">
+              <label for="email">Email Address <span class="req">*</span></label>
+              <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+              <span class="err" id="err-email"></span>
+            </div>
+          </div>
+
+          <!-- ── ROW 3: Password + Confirm ── -->
+          <div class="form-row">
+            <div class="field-group">
+              <label for="password">Password <span class="req">*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="password" placeholder="Min 8 characters" />
+                <button type="button" class="eye-btn" id="togglePwd" aria-label="Toggle password">👁</button>
+              </div>
+              <span class="err" id="err-password"></span>
+            </div>
+            <div class="field-group">
+              <label for="confirmPassword">Confirm Password <span class="req">*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="confirmPassword" placeholder="Re-enter password" />
+                <button type="button" class="eye-btn" id="toggleConfirm" aria-label="Toggle confirm">👁</button>
+              </div>
+              <span class="err" id="err-confirmPassword"></span>
+            </div>
+          </div>
+
+          <!-- ── ROW 4: DOB + Move-in Date ── -->
+          <div class="form-row">
+            <div class="field-group">
+              <label for="dob">Date of Birth <span class="req">*</span></label>
+              <input type="date" id="dob" />
+              <span class="err" id="err-dob"></span>
+            </div>
+            <div class="field-group">
+              <label for="moveIn">Move-in Date <span class="req">*</span></label>
+              <input type="date" id="moveIn" />
+              <span class="err" id="err-moveIn"></span>
+            </div>
+          </div>
+
+          <!-- ── ROW 5: Flat + Tower ── -->
+          <div class="form-row">
+            <div class="field-group">
+              <label for="flat">Flat Number <span class="req">*</span></label>
+              <input type="text" id="flat" placeholder="e.g. A-204" />
+              <span class="err" id="err-flat"></span>
+            </div>
+            <div class="field-group">
+              <label for="tower">Tower / Block <span class="req">*</span></label>
+              <select id="tower">
+                <option value="">— Select Tower —</option>
+                <option value="Tower A">Tower A</option>
+                <option value="Tower B">Tower B</option>
+                <option value="Tower C">Tower C</option>
+                <option value="Tower D">Tower D</option>
+              </select>
+              <span class="err" id="err-tower"></span>
+            </div>
+          </div>
+
+          <!-- ── ROW 6: Role + Gender ── -->
+          <div class="form-row">
+            <div class="field-group">
+              <label for="role">Resident Role <span class="req">*</span></label>
+              <select id="role">
+                <option value="">— Select Role —</option>
+                <option value="Owner">Owner</option>
+                <option value="Tenant">Tenant</option>
+                <option value="Committee Member">Committee Member</option>
+                <option value="Facility Manager">Facility Manager</option>
+              </select>
+              <span class="err" id="err-role"></span>
+            </div>
+            <div class="field-group">
+              <label for="gender">Gender</label>
+              <select id="gender">
+                <option value="">— Prefer not to say —</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Non-binary">Non-binary</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ── ROW 7: Profile Photo ── -->
+          <div class="form-row">
+            <div class="field-group full">
+              <label for="profilePhoto">Profile Photo</label>
+              <div class="drop-zone" id="dropZone">
+                <input type="file" id="profilePhoto" accept="image/*" hidden />
+                <div class="drop-inner" id="dropInner">
+                  <span class="drop-icon">📷</span>
+                  <span class="drop-text">Drag & drop a photo, or <button type="button" class="browse-btn" id="browseBtn">browse</button></span>
+                  <span class="drop-hint">JPG, PNG up to 5 MB</span>
+                </div>
+                <div class="preview-wrap" id="previewWrap" style="display:none;">
+                  <img id="photoPreview" src="" alt="Preview" />
+                  <button type="button" class="remove-photo" id="removePhoto">✕ Remove</button>
+                </div>
+              </div>
+              <span class="err" id="err-photo"></span>
+            </div>
+          </div>
+
+          <!-- ── ROW 8: Checkbox ── -->
+          <div class="form-row">
+            <div class="field-group full checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="terms" />
+                <span>I agree to the <a href="#" class="link">Resident Terms</a> and <a href="#" class="link">Privacy Policy</a></span>
+              </label>
+              <span class="err" id="err-terms"></span>
+            </div>
+          </div>
+
+          <!-- ── SUBMIT ── -->
+          <div class="form-row">
+            <div class="field-group full">
+              <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Register as Resident</span>
+                <span id="btnSpinner" class="spinner" style="display:none;"></span>
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- ── REGISTRATION CARD (shown after submit) ── -->
+  <section class="card-section" id="cardSection" style="display:none;">
+    <div class="card-wrapper">
+      <h2 class="card-heading">✅ Registration Successful</h2>
+      <p class="card-sub">Welcome to Greenwood Heights. Your resident profile has been saved.</p>
+      <div class="resident-card" id="residentCard">
+        <!-- filled by JS -->
+      </div>
+      <div class="card-actions">
+        <button class="card-btn primary" id="goDashboard">Enter Dashboard →</button>
+        <button class="card-btn ghost" id="registerAnother">Register another</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TOAST ── -->
+  <div class="toast" id="toast"></div>
+
+  <script src="register.js"></script>
+</body>
+</html>
